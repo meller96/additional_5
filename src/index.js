@@ -1,22 +1,33 @@
-module.exports =  function check(str, bracketsConfig) {
-    if (str.length == 0)
-        return true;
-    for (var i = 0; i < bracketsConfig.length; i++) {
-        var firstIndex = str.indexOf(bracketsConfig[i][0]);
-        var secondIndex = str.indexOf(bracketsConfig[i][1], firstIndex + 1);
-        if (firstIndex == -1 && secondIndex == -1)
-            continue;
-        if (firstIndex == -1 || secondIndex == -1)
-            return false;
-        while (secondIndex != -1) {
-            if (check(str.substr(firstIndex + 1, secondIndex-firstIndex - 1), bracketsConfig) && check(str.substr(0, firstIndex) + str.substr(secondIndex+1), bracketsConfig))
-                break;
-            secondIndex = str.indexOf(bracketsConfig[i][1], secondIndex + 1);
-        }
-        if (secondIndex == -1)
-            return false;
-    }
-    return true;       
+module.exports = function check(str, bracketsConfig) { 
+if (str.length == 0) 
+return true; 
+var arr = []; 
+for (var i = 0; i < bracketsConfig.length; i++) 
+{ 
+arr[i] = []; 
+} 
+for (i = 0; i < str.length; i++) 
+{ 
+for (var j = 0; j < bracketsConfig.length; j++) { 
+if (str[i] == bracketsConfig[j][1] && !(bracketsConfig[j][1] == bracketsConfig[j][0] && arr[j].length == 0)) 
+{ 
+for (var k = 0; k < bracketsConfig.length; k++) 
+if (arr[k][arr[k].length - 1] > arr[j][arr[j].length - 1]) 
+return false; 
+arr[j] = arr[j].slice(0, arr[j].length - 1); 
+//print("sliced ", j, " ", arr[j]); 
+} 
+else if (str[i] == bracketsConfig[j][0]) 
+{ 
+arr[j].push(i); 
+//print("start ", j, " ", arr[j]); 
+} 
+} 
+} 
+for (var i = 0; i < bracketsConfig.length; i++) 
+{ 
+if (arr[i].length != 0) 
+return false; 
+} 
+return true; 
 }
- 
-
